@@ -1,0 +1,46 @@
+version: '3.9'
+
+networks:
+  general:
+    driver: bridge
+volumes:
+  mysql:
+    driver: local
+
+services:
+  python:
+    build:
+      context: .
+      dockerfile: ./docker/python/Dockerfile
+      args:
+        - 'PYTHON_VERSION=${PYTHON_VERSION}'
+    volumes:
+      - './src:/var/app/src'
+      - '${DATA_PATH_HOST}/storage:/storage'
+    extra_hosts:
+      - 'dockerhost:${DOCKER_HOST_IP}'
+    stdin_open: true
+    tty: true
+    networks:
+      - general
+  mysql:
+    build:
+      context: ./docker/mysql
+      args:
+        - 'MYSQL_VERSION=${MYSQL_VERSION}'
+    environment:
+      - 'MYSQL_DATABASE=${MYSQL_DATABASE}'
+      - 'MYSQL_USER=${MYSQL_USER}'
+      - 'MYSQL_PASSWORD=${MYSQL_PASSWORD}'
+      - 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}'
+      - 'TZ=UTC'
+    hostname: mysql
+    volumes:
+      - '${DATA_PATH_HOST}/mysql:/var/lib/mysql'
+      - '${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d'
+    ports:
+      - '${MYSQL_PORT}:3306'
+    networks:
+      - general
+
+
