@@ -15,11 +15,10 @@
 #     mysql -u root -p < /docker-entrypoint-initdb.d/createdb.sql
 #
 
-
-
 ### Sample as of real project with setting utf8mb4_unicode_ci on database level as default
-CREATE USER 'fastapi_user'@'%';
+CREATE USER IF NOT EXISTS 'fastapi_user'@'%';
 CREATE DATABASE IF NOT EXISTS `fastapi_crud_db` COLLATE 'utf8mb4_unicode_ci' ;
+GRANT ALL ON `fastapi_crud_db`.* TO 'root'@'%' ;
 GRANT ALL ON `fastapi_crud_db`.* TO 'fastapi_user'@'%' ;
 
 FLUSH PRIVILEGES ;

@@ -1,5 +1,4 @@
 version: '3.9'
-
 networks:
   general:
     driver: bridge
@@ -16,9 +15,18 @@ services:
         - 'PYTHON_VERSION=${PYTHON_VERSION}'
     volumes:
       - './src:/var/app/src'
+      - './tests:/var/app/tests'
+      - './alembic.ini:/var/app/alembic.ini'
+      - './.env:/var/app/.env'
+      - './templates:/var/app/templates'
+      - './alembic:/var/app/alembic'
       - '${DATA_PATH_HOST}/storage:/storage'
     extra_hosts:
       - 'dockerhost:${DOCKER_HOST_IP}'
+    depends_on: mysql
+    hostname: python_container
+    ports:
+      - '${PYTHON_PORT}:8080'
     stdin_open: true
     tty: true
     networks:
