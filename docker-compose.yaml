@@ -23,7 +23,8 @@ services:
       - '${DATA_PATH_HOST}/storage:/storage'
     extra_hosts:
       - 'dockerhost:${DOCKER_HOST_IP}'
-    depends_on: mysql
+    depends_on:
+      - mysql
     hostname: python_container
     ports:
       - '${PYTHON_PORT}:8080'

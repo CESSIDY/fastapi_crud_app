@@ -1,13 +1,10 @@
-from enum import Enum
-from typing import Optional
-
 from fastapi import FastAPI
-from pydantic import BaseModel
 from dotenv import load_dotenv
+from src.auth.router import router as auth_router
 
 load_dotenv()
 app = FastAPI()
-
+app.include_router(auth_router)
 
 @app.get("/")
 async def root():
